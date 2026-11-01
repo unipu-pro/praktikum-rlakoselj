@@ -1,8 +1,18 @@
 """Command line interface for talking to a local Ollama model."""
 import argparse
+import signal
 import sys
+from pathlib import Path
 
 import ollama_client
+VERSION_FILE = Path(__file__).with_name("VERSION.txt")
+
+
+def read_version() -> str:
+    try:
+        return VERSION_FILE.read_text(encoding="utf-8").strip()
+    except FileNotFoundError:
+        return "0.0.0"
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -40,10 +50,11 @@ def cmd_chat(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="llm", description="Talk to a local Ollama model.")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {read_version()}")
+
     parser.add_argument("--model", default=None, help="model name (default: OLLAMA_MODEL or llama3.2:1b)")
     parser.add_argument("--system", default=None, help="optional system prompt")
     subcommands = parser.add_subparsers(dest="command", required=True)
-
     subcommands.add_parser("status", help="check that Ollama is running").set_defaults(handler=cmd_status)
     subcommands.add_parser("models", help="list locally installed models").set_defaults(handler=cmd_models)
 
@@ -54,8 +65,12 @@ def build_parser() -> argparse.ArgumentParser:
     subcommands.add_parser("chat", help="interactive chat with history").set_defaults(handler=cmd_chat)
     return parser
 
+def _exit_on_sigterm(signum, frame) -> None:
+    raise SystemExit(128 + signum)
+
 
 def main() -> int:
+    signal.signal(signal.SIGTERM, _exit_on_sigterm)
     args = build_parser().parse_args()
     try:
         return args.handler(args)
