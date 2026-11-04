@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/unipu-pro/praktikum-rlakoselj/compare/v1.1.0...v1.2.0) (2026-11-04)
+
+
+### Features
+
+* containerize the CLI ([01d2607](https://github.com/unipu-pro/praktikum-rlakoselj/commit/01d2607ed408de4d99bd92113fa6c07608d72675))
+* containerize the CLI with a multi-stage Dockerfile and add --version ([65df002](https://github.com/unipu-pro/praktikum-rlakoselj/commit/65df002f759c5e0f3c514ece6f2514b759026f37))
+
 ## [1.1.0](https://github.com/unipu-praktikum-razvojne-operacije/praktikum-rlakoselj/compare/v1.0.0...v1.1.0) (2026-10-25)
 
 
