@@ -14,7 +14,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Source code last: it changes most often.
-COPY version.txt ollama_client.py llm.py ./
+COPY VERSION.txt ollama_client.py llm.py ./
 
 ENTRYPOINT ["python", "llm.py"]
 CMD ["--help"]
