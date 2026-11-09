@@ -1,0 +1,20 @@
+# Docker image for running Python tests.
+FROM python:3.13-alpine
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install application and test dependencies.
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install --no-cache-dir -r requirements-dev.txt
+
+# Copy application code.
+COPY VERSION.txt ollama_client.py llm.py ./
+
+# Copy tests.
+COPY tests/ tests/
+
+# Run tests.
+CMD ["python", "-m", "pytest", "-q", "tests"]
